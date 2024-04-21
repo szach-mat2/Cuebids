@@ -1,0 +1,64 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100vw;
+    /* height: 100vh; */
+}
+
+.row-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.card {
+    width: 90px;
+    height: 150px;
+    background-size:70%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 2px solid black;
+    border-radius: 5%;
+    font-size: 30px;
+    text-indent: 5px;
+    margin: 5px;
+}
+
+.containerCardName {
+    justify-content: center;
+    display: flex;
+    /* width: 100vw; */
+    font-size: 24px; /* Increase font size */
+}
+
+/* Hide the last row */
+.row-container:last-child {
+    position: fixed;
+    bottom: 9%;
+    left: 0;
+    width: 100%;
+}
+
+.shuffleButton {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 60px;
+}
+.butContainer{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
