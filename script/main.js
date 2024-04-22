@@ -5,6 +5,8 @@ const containerCardName = document.querySelector('.containerCardName');
 const shuffleButton = document.querySelector('.shuffleButton'); // Select the shuffle button
 const toggleButton = document.querySelector('.toggleButton'); // Select the toggle button
 const toggleHandsButton = document.querySelector('.toggleHandsButton'); // Select the toggle hands button
+const handIndicationBottom = document.querySelector('.handIndicationBottom')
+const handIndicationTop = document.querySelector('.handIndicationTop')
 
 let deck = {}; // Declare deck as a global variable
 let hand1 = []; // Array to store drawn cards for the first row
@@ -53,13 +55,22 @@ function renderVisibleHands() {
     container.innerHTML = ''; // Clear the container
 
     // Render hand 2 first (if it should be shown)
-    if (!showHand1 || showBothHands) {
+    if (!showHand1) {
         renderHand(hand2);
+        handIndicationBottom.innerHTML='North'
+        handIndicationTop.innerHTML='South'
+    }
+    if(showBothHands){
+        renderHand(hand2)
+        handIndicationBottom.innerHTML='South'
+        handIndicationTop.innerHTML='North'
     }
 
     // Render hand 1
-    if (showHand1 || showBothHands) {
+    if (showHand1) {
         renderHand(hand1);
+        handIndicationBottom.innerHTML='South'
+        handIndicationTop.innerHTML='North'
     }
 }
 
@@ -170,6 +181,11 @@ toggleButton.addEventListener('click', () => {
 toggleHandsButton.addEventListener('click', () => {
     // Toggle the showBothHands flag
     showBothHands = !showBothHands;
+    if(showBothHands==true){
+        toggleButton.disabled = true
+    }else{
+        toggleButton.disabled = false
+    }
     // Render the visible hand(s)
     renderVisibleHands();
 });
