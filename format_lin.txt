@@ -1,0 +1,2 @@
+qx|o1|md|3sQ9hAKT2dAT3cJT53,sJThQJ93dJ72cK764,sA8754h654dK85cA2,sK632h87dQ964cQ98|sv|0|
+fixed|board|fixed|dealer,suit:values;,|fixed|vul|
