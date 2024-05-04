@@ -5,12 +5,16 @@ const containerCardName = document.querySelector('.containerCardName');
 const shuffleButton = document.querySelector('.shuffleButton'); // Select the shuffle button
 const toggleButton = document.querySelector('.toggleButton'); // Select the toggle button
 const toggleHandsButton = document.querySelector('.toggleHandsButton'); // Select the toggle hands button
+const analyze = document.querySelector('.analyze'); 
+const anchorAnalyze = document.querySelector('.anchorAnalyze'); 
 const handIndicationBottom = document.querySelector('.handIndicationBottom')
 const handIndicationTop = document.querySelector('.handIndicationTop')
 
 let deck = {}; // Declare deck as a global variable
 let hand1 = []; // Array to store drawn cards for the first row
 let hand2 = []; // Array to store drawn cards for the second row
+let hand3 = []; // Array to store drawn cards for the 3 player
+let hand4 = []; // Array to store drawn cards for the 4 player
 let showHand1 = true; // Flag to toggle visibility of hand 1
 let showBothHands = false; // Flag to toggle visibility of both hands
 const numCols = 13; // Number of columns
@@ -61,9 +65,17 @@ function renderVisibleHands() {
         handIndicationTop.innerHTML='South'
     }
     if(showBothHands){
-        renderHand(hand2)
-        handIndicationBottom.innerHTML='South'
-        handIndicationTop.innerHTML='North'
+        if(!showHand1){
+            container.innerHTML=''
+            renderHand(hand2)
+            renderHand(hand1)
+            handIndicationTop.innerHTML='North'    
+            handIndicationBottom.innerHTML='South'
+        }else{
+            renderHand(hand2)
+            handIndicationBottom.innerHTML='South'
+            handIndicationTop.innerHTML='North'
+        }
     }
 
     // Render hand 1
@@ -137,6 +149,45 @@ function sortHand(hand) {
 
     return sortedHand;
 }
+function parseHand(hand) {
+    const suitsOrder = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
+    const suitLetters = ['S', 'H', 'D', 'C'];
+    let parsedHand = '';
+
+    // Group cards by suit
+    const groupedCards = {};
+    hand.forEach(card => {
+        const suit = deck[card].suit;
+        if (!groupedCards[suit]) {
+            groupedCards[suit] = [];
+        }
+        groupedCards[suit].push(deck[card].value === '10' ? 'T' : deck[card].value);
+    });
+
+    // Concatenate the values of each suit in the desired format
+    suitsOrder.forEach((suit, index) => {
+        if (groupedCards[suit]) {
+            parsedHand += suitLetters[index] + groupedCards[suit].join('') + '.';
+        } else {
+            parsedHand += '.';
+        }
+    });
+
+    // Remove the trailing dot
+    parsedHand = parsedHand.slice(0, -1);
+
+    return parsedHand;
+}
+
+
+function joinHands(hand1, hand2, hand3,hand4) {
+    const parsedHand1 = parseHand(hand1);
+    const parsedHand2 = parseHand(hand2);
+    const parsedHand3 = parseHand(hand3);
+    const parsedHand4 = parseHand(hand4);
+    return `http://127.0.0.1:5501/bsol/ddummy.htm?lin=qx|1|md|3${parsedHand1},${parsedHand2},${parsedHand3},${parsedHand4}|sv|0|`;
+}
+
 
 // Check if deck exists in localStorage
 const storedDeck = localStorage.getItem('deck');
@@ -149,10 +200,14 @@ if (storedDeck) {
 // Draw hands of cards for both rows
 hand1 = Object.keys(deck).slice(0, 13);
 hand2 = Object.keys(deck).slice(13, 26);
+hand3 = Object.keys(deck).slice(26, 39);
+hand4 = Object.keys(deck).slice(39, 52);
 
 // Sort the hands automatically after shuffling
 hand1 = sortHand(hand1);
 hand2 = sortHand(hand2);
+hand3 = sortHand(hand3);
+hand4 = sortHand(hand4);
 
 // Render the cards initially
 renderVisibleHands();
@@ -163,9 +218,13 @@ shuffleButton.addEventListener('click', () => {
     // Re-draw hands after shuffling
     hand1 = Object.keys(deck).slice(0, 13);
     hand2 = Object.keys(deck).slice(13, 26);
+    hand3 = Object.keys(deck).slice(26, 39);
+    hand4 = Object.keys(deck).slice(39, 52);
     // Re-sort the hands after shuffling
     hand1 = sortHand(hand1);
     hand2 = sortHand(hand2);
+    hand3 = sortHand(hand3);
+    hand4 = sortHand(hand4);
     renderVisibleHands();
 });
 
@@ -189,3 +248,6 @@ toggleHandsButton.addEventListener('click', () => {
     // Render the visible hand(s)
     renderVisibleHands();
 });
+analyze.addEventListener('click', ()=>{
+    window.open(joinHands(hand1,hand3,hand2,hand4))
+})

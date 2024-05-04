@@ -63,10 +63,10 @@ body{
     height: 60px;
 }
 .butContainer{
-    display: flex;
-    justify-content: center;
-    align-content: center;
-
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    transform: translate(-50%);
 }
 .butContainer button{
     margin-top: 5vh;
@@ -90,4 +90,7 @@ body{
 
     transform: translate(-50%);
     position: fixed;
+}
+.anchorAnalyze{
+    
 }
