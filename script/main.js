@@ -9,6 +9,8 @@ const analyze = document.querySelector('.analyze');
 const anchorAnalyze = document.querySelector('.anchorAnalyze'); 
 const handIndicationBottom = document.querySelector('.handIndicationBottom')
 const handIndicationTop = document.querySelector('.handIndicationTop')
+const biddingOptions = document.querySelector('.bidding-options');
+
 
 let deck = {}; // Declare deck as a global variable
 let hand1 = []; // Array to store drawn cards for the first row
@@ -114,6 +116,7 @@ function renderHand(hand) {
     }
 }
 
+
 // Custom sorting algorithm for sorting cards based on suit color and card value
 function sortHand(hand) {
     const suitsOrder = ['Spades', 'Hearts', 'Clubs', 'Diamonds'];
@@ -149,7 +152,7 @@ function sortHand(hand) {
 
     return sortedHand;
 }
-function parseHand(hand) {
+function parseHand(hand, deck) {
     const suitsOrder = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
     const suitLetters = ['S', 'H', 'D', 'C'];
     let parsedHand = '';
@@ -180,11 +183,12 @@ function parseHand(hand) {
 }
 
 
+
 function joinHands(hand1, hand2, hand3,hand4) {
-    const parsedHand1 = parseHand(hand1);
-    const parsedHand2 = parseHand(hand2);
-    const parsedHand3 = parseHand(hand3);
-    const parsedHand4 = parseHand(hand4);
+    const parsedHand1 = parseHand(hand1, deck);
+    const parsedHand2 = parseHand(hand2, deck);
+    const parsedHand3 = parseHand(hand3, deck);
+    const parsedHand4 = parseHand(hand4, deck);    
     return `http://127.0.0.1:5501/bsol/ddummy.htm?lin=qx|1|md|3${parsedHand1},${parsedHand2},${parsedHand3},${parsedHand4}|sv|0|`;
 }
 
@@ -229,25 +233,70 @@ shuffleButton.addEventListener('click', () => {
 });
 
 // Event listener for the toggle button
-toggleButton.addEventListener('click', () => {
-    // Toggle the showHand1 flag
-    showHand1 = !showHand1;
-    // Render the visible hand(s)
-    renderVisibleHands();
+// toggleButton.addEventListener('click', () => {
+//     // Toggle the showHand1 flag
+//     showHand1 = !showHand1;
+//     // Render the visible hand(s)
+//     renderVisibleHands();
+// });
+
+// // Event listener for the toggle hands button
+// toggleHandsButton.addEventListener('click', () => {
+//     // Toggle the showBothHands flag
+//     showBothHands = !showBothHands;
+//     if(showBothHands==true){
+//         toggleButton.disabled = true
+//     }else{
+//         toggleButton.disabled = false
+//     }
+//     // Render the visible hand(s)
+//     renderVisibleHands();
+// });
+// analyze.addEventListener('click', ()=>{
+//     window.open(joinHands(hand1,hand3,hand2,hand4))
+// })
+
+
+let bool= false
+// bidOption.forEach(option => {
+//   option.addEventListener('click', () => {
+//     biddingOptions.classList.toggle('hidden');
+//     bool = !bool
+//     if(bool== true){
+//         option.style.backgroundColor = 'red'
+//     }
+//     if(bool==false){
+//         option.style.backgroundColor = 'lightblue'
+//     }
+//   });
+// });
+const bidOptions = document.querySelectorAll('.bid-option');
+
+bidOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    // Remove red background from all bid options
+    bidOptions.forEach(opt => {
+      opt.classList.remove('selected');
+    });
+
+    // Add red background to the clicked bid option
+    option.classList.add('selected');
+
+    biddingOptions.classList.toggle('hidden');
+
+    if (!biddingOptions.classList.contains('hidden')) {
+      const bidNumber = option.textContent;
+      biddingOptions.innerHTML = ''; // Clear previous options
+      
+      // Add bidding options for colors and no trump
+      const colors = ['C', 'D', 'H', 'S', 'NT'];
+      colors.forEach(color => {
+        const biddingOption = document.createElement('div');
+        biddingOption.classList.add('bidding-option');
+        biddingOption.textContent = `${bidNumber} ${color}`;
+        biddingOptions.appendChild(biddingOption);
+      });
+    }
+  });
 });
 
-// Event listener for the toggle hands button
-toggleHandsButton.addEventListener('click', () => {
-    // Toggle the showBothHands flag
-    showBothHands = !showBothHands;
-    if(showBothHands==true){
-        toggleButton.disabled = true
-    }else{
-        toggleButton.disabled = false
-    }
-    // Render the visible hand(s)
-    renderVisibleHands();
-});
-analyze.addEventListener('click', ()=>{
-    window.open(joinHands(hand1,hand3,hand2,hand4))
-})
