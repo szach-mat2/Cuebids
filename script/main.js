@@ -10,6 +10,7 @@ const anchorAnalyze = document.querySelector('.anchorAnalyze');
 const handIndicationBottom = document.querySelector('.handIndicationBottom')
 const handIndicationTop = document.querySelector('.handIndicationTop')
 const biddingOptions = document.querySelector('.bidding-options');
+const biddingSpace = document.querySelector('.bidding-space');
 
 
 let deck = {}; // Declare deck as a global variable
@@ -233,70 +234,90 @@ shuffleButton.addEventListener('click', () => {
 });
 
 // Event listener for the toggle button
-// toggleButton.addEventListener('click', () => {
-//     // Toggle the showHand1 flag
-//     showHand1 = !showHand1;
-//     // Render the visible hand(s)
-//     renderVisibleHands();
-// });
+toggleButton.addEventListener('click', () => {
+    // Toggle the showHand1 flag
+    showHand1 = !showHand1;
+    // Render the visible hand(s)
+    renderVisibleHands();
+});
 
-// // Event listener for the toggle hands button
-// toggleHandsButton.addEventListener('click', () => {
-//     // Toggle the showBothHands flag
-//     showBothHands = !showBothHands;
-//     if(showBothHands==true){
-//         toggleButton.disabled = true
-//     }else{
-//         toggleButton.disabled = false
-//     }
-//     // Render the visible hand(s)
-//     renderVisibleHands();
-// });
-// analyze.addEventListener('click', ()=>{
-//     window.open(joinHands(hand1,hand3,hand2,hand4))
-// })
+// Event listener for the toggle hands button
+toggleHandsButton.addEventListener('click', () => {
+    // Toggle the showBothHands flag
+    showBothHands = !showBothHands;
+    if(showBothHands==true){
+        toggleButton.disabled = true
+    }else{
+        toggleButton.disabled = false
+    }
+    // Render the visible hand(s)
+    renderVisibleHands();
+});
+analyze.addEventListener('click', ()=>{
+    window.open(joinHands(hand1,hand3,hand2,hand4))
+})
 
 
-let bool= false
-// bidOption.forEach(option => {
-//   option.addEventListener('click', () => {
-//     biddingOptions.classList.toggle('hidden');
-//     bool = !bool
-//     if(bool== true){
-//         option.style.backgroundColor = 'red'
-//     }
-//     if(bool==false){
-//         option.style.backgroundColor = 'lightblue'
-//     }
-//   });
-// });
+
+
 const bidOptions = document.querySelectorAll('.bid-option');
+let lastClickedOption = null; // Variable to store the last clicked option
 
 bidOptions.forEach(option => {
   option.addEventListener('click', () => {
-    // Remove red background from all bid options
-    bidOptions.forEach(opt => {
-      opt.classList.remove('selected');
-    });
+    // Check if the clicked option is the same as the last clicked option
+    if (lastClickedOption === option) {
+      // Toggle red background and hide bidding options if clicked twice in a row
+      option.classList.toggle('selected');
+      biddingOptions.classList.toggle('hidden');
+    } else {
+      // Remove red background from all bid options and hide all bidding options
+      bidOptions.forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      biddingOptions.classList.add('hidden');
 
-    // Add red background to the clicked bid option
-    option.classList.add('selected');
+      // Add red background to the clicked bid option and show bidding options
+      option.classList.add('selected');
+      biddingOptions.classList.remove('hidden');
 
-    biddingOptions.classList.toggle('hidden');
-
-    if (!biddingOptions.classList.contains('hidden')) {
+      // Add bidding options for colors and no trump
       const bidNumber = option.textContent;
       biddingOptions.innerHTML = ''; // Clear previous options
-      
-      // Add bidding options for colors and no trump
-      const colors = ['C', 'D', 'H', 'S', 'NT'];
+
+      const colors = ['club', 'diamond', 'heart', 'spade', 'no-trump'];
       colors.forEach(color => {
-        const biddingOption = document.createElement('div');
-        biddingOption.classList.add('bidding-option');
-        biddingOption.textContent = `${bidNumber} ${color}`;
-        biddingOptions.appendChild(biddingOption);
+        const biddingOptionContainer = document.createElement('div');
+        biddingOptionContainer.classList.add('bidding-option-container');
+
+        const biddingOptionSpan = document.createElement('span');
+        const biddingOptionImg = document.createElement('img');
+
+        biddingOptionSpan.textContent = `${bidNumber}`;
+        biddingOptionImg.src = `../img/${color}.svg`;
+        biddingOptionImg.alt = color;
+        biddingOptionSpan.classList.add('bidding-option-span');
+        biddingOptionImg.classList.add('bidding-option-img')
+
+        // Append span and img to the container
+        biddingOptionContainer.appendChild(biddingOptionSpan);
+        biddingOptionContainer.appendChild(biddingOptionImg);
+
+        // Append container to the biddingOptions
+        biddingOptions.appendChild(biddingOptionContainer);
+
+        // Add click event listener to the container
+        biddingOptionContainer.addEventListener('click', () => {
+            
+        });
       });
     }
+
+    // Update the last clicked option
+    lastClickedOption = option;
   });
 });
+
+
+
 
