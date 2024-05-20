@@ -3,9 +3,11 @@
     padding: 0;
     font-size: 20px;
     font-family: 'Lato', sans-serif;
+    box-sizing: border-box;
+    user-select: none;
 }
 body{
-    background-color: rgb(30, 155, 30);
+    background-color: rgb(30, 131, 30);
 }
 .cont{
     display: flex;
@@ -83,7 +85,7 @@ body{
     border: none;
 }
 .handIndicationBottom {
-    bottom: 28%;
+    bottom: 27%;
     left: 50%;
     transform: translateX(-50%);
     font-size: 30px;
@@ -118,6 +120,7 @@ body{
     background-color: lightblue;
     border: 1px solid black;
     box-sizing: border-box;
+    margin-top:2%;
 }
 .vul{
     width: 100%;
@@ -144,55 +147,64 @@ body{
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    position: relative;
-  }
-  
-  .bid-option {
+    position: absolute;
+    top: 55%;
+    width: 480.5px;
+    font-size: 40px;
+}
+
+.bid-option {
+    padding: 20.3px;
+    background-color: lightblue;
+    cursor: pointer;
+}
+.pass {
     padding: 20px;
     background-color: lightblue;
     cursor: pointer;
-  }
-  .pass {
-    padding: 20px;
-    background-color: lightblue;
-    cursor: pointer;
-  }
-  .bidding-options {
+}
+.bidding-options {
     display: flex;
     flex-wrap: wrap;
-  }
-  
-  .bidding-option {
-    padding: 30px;
+    background-color: lightgray;
+    align-items: center;
+    gap: 5px;
+    font-size: inherit;
+}
+
+.bidding-option {
+    padding: 0 0 0 20px;
     background-color: lightgray;
     cursor: pointer;
-  }
-  
-  .hidden {
+    font-size: inherit;
+}
+.bidding-option-img{
+    width:52px;
+    height:63px;
+    border-Right:1px solid black;
+    display:block;
+    padding: 20px 20px 20px 0;
+
+}
+.pointer-events{
+    pointer-events: none;
+    background-color: gray;
+}
+.hidden {
     display: none;
-  }
-.clubs{
-    background-image: url('../img/clubs.svg');
-    background-size: cover;
 }
-.diamonds{
-    background-image: url('../img/diamonds.svg');
-    background-size: cover;
+.selected{
+    background-color: aquamarine;
 }
-.hearts{
-    background-image: url('../img/hearts.svg');
-    background-size: cover;
+
+.bidding-option-container {
+    display: flex;
+    align-items: center;
+    /* padding: 20px; */
+    cursor: pointer;
 }
-.spades{
-    background-image: url('../img/spades.svg');
-    background-size: cover;
-}
-.no-trump{
-    background-image: url('../img/no-trump.png');
-    background-size: cover;
-    background-position: center;
-}
-.selected {
-    background-color: red;
+.bidding-option-span{
+    text-indent: 20px;
+    font-size: 28px;
 }
   
