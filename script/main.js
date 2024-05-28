@@ -11,7 +11,7 @@ const handIndicationBottom = document.querySelector('.handIndicationBottom')
 const handIndicationTop = document.querySelector('.handIndicationTop')
 const biddingOptions = document.querySelector('.bidding-options');
 const biddingSpace = document.querySelector('.bidding-space');
-
+const bidOptions = document.querySelectorAll('.bid-option');
 
 let deck = {}; // Declare deck as a global variable
 let hand1 = []; // Array to store drawn cards for the first row
@@ -21,7 +21,6 @@ let hand4 = []; // Array to store drawn cards for the 4 player
 let showHand1 = true; // Flag to toggle visibility of hand 1
 let showBothHands = false; // Flag to toggle visibility of both hands
 const numCols = 13; // Number of columns
-
 
 // Function to create a new shuffled deck
 function createShuffledDeck() {
@@ -57,7 +56,6 @@ function shuffleDeck() {
 }
 
 // Function to render the cards for the visible hand(s)
-// Function to render the cards for the visible hand(s)
 function renderVisibleHands() {
     container.innerHTML = ''; // Clear the container
 
@@ -89,7 +87,6 @@ function renderVisibleHands() {
     }
 }
 
-
 // Function to render a single hand
 function renderHand(hand) {
     // Create and append cards to the row container
@@ -116,7 +113,6 @@ function renderHand(hand) {
         // });
     }
 }
-
 
 // Custom sorting algorithm for sorting cards based on suit color and card value
 function sortHand(hand) {
@@ -153,6 +149,7 @@ function sortHand(hand) {
 
     return sortedHand;
 }
+
 function parseHand(hand, deck) {
     const suitsOrder = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
     const suitLetters = ['S', 'H', 'D', 'C'];
@@ -183,16 +180,13 @@ function parseHand(hand, deck) {
     return parsedHand;
 }
 
-
-
-function joinHands(hand1, hand2, hand3,hand4) {
+function joinHands(hand1, hand2, hand3, hand4) {
     const parsedHand1 = parseHand(hand1, deck);
     const parsedHand2 = parseHand(hand2, deck);
     const parsedHand3 = parseHand(hand3, deck);
     const parsedHand4 = parseHand(hand4, deck);    
     return `http://127.0.0.1:5501/bsol/ddummy.htm?lin=qx|1|md|3${parsedHand1},${parsedHand2},${parsedHand3},${parsedHand4}|sv|0|`;
 }
-
 
 // Check if deck exists in localStorage
 const storedDeck = localStorage.getItem('deck');
@@ -233,91 +227,129 @@ shuffleButton.addEventListener('click', () => {
     renderVisibleHands();
 });
 
-// Event listener for the toggle button
-toggleButton.addEventListener('click', () => {
-    // Toggle the showHand1 flag
-    showHand1 = !showHand1;
-    // Render the visible hand(s)
-    renderVisibleHands();
-});
+// // Event listener for the toggle button
+// toggleButton.addEventListener('click', () => {
+//     // Toggle the showHand1 flag
+//     showHand1 = !showHand1;
+//     // Render the visible hand(s)
+//     renderVisibleHands();
+// });
 
-// Event listener for the toggle hands button
-toggleHandsButton.addEventListener('click', () => {
-    // Toggle the showBothHands flag
-    showBothHands = !showBothHands;
-    if(showBothHands==true){
-        toggleButton.disabled = true
-    }else{
-        toggleButton.disabled = false
-    }
-    // Render the visible hand(s)
-    renderVisibleHands();
-});
-analyze.addEventListener('click', ()=>{
-    window.open(joinHands(hand1,hand3,hand2,hand4))
-})
+// // Event listener for the toggle hands button
+// toggleHandsButton.addEventListener('click', () => {
+//     // Toggle the showBothHands flag
+//     showBothHands = !showBothHands;
+//     if(showBothHands==true){
+//         toggleButton.disabled = true
+//     }else{
+//         toggleButton.disabled = false
+//     }
+//     // Render the visible hand(s)
+//     renderVisibleHands();
+// });
 
-
-
-
-const bidOptions = document.querySelectorAll('.bid-option');
-let lastClickedOption = null; // Variable to store the last clicked option
+// analyze.addEventListener('click', () => {
+//     window.open(joinHands(hand1, hand3, hand2, hand4));
+// });
+let clickedBids = []; // Array to store clicked bids
+let clickedBidsValues = []; // Array to store full bid information
 
 bidOptions.forEach(option => {
   option.addEventListener('click', () => {
-    // Check if the clicked option is the same as the last clicked option
-    if (lastClickedOption === option) {
-      // Toggle red background and hide bidding options if clicked twice in a row
-      option.classList.toggle('selected');
-      biddingOptions.classList.toggle('hidden');
-    } else {
-      // Remove red background from all bid options and hide all bidding options
-      bidOptions.forEach(opt => {
-        opt.classList.remove('selected');
-      });
-      biddingOptions.classList.add('hidden');
+    const bidNumber = option.textContent;
 
-      // Add red background to the clicked bid option and show bidding options
-      option.classList.add('selected');
-      biddingOptions.classList.remove('hidden');
-
-      // Add bidding options for colors and no trump
-      const bidNumber = option.textContent;
-      biddingOptions.innerHTML = ''; // Clear previous options
-
-      const colors = ['club', 'diamond', 'heart', 'spade', 'no-trump'];
-      colors.forEach(color => {
-        const biddingOptionContainer = document.createElement('div');
-        biddingOptionContainer.classList.add('bidding-option-container');
-
-        const biddingOptionSpan = document.createElement('span');
-        const biddingOptionImg = document.createElement('img');
-
-        biddingOptionSpan.textContent = `${bidNumber}`;
-        biddingOptionImg.src = `../img/${color}.svg`;
-        biddingOptionImg.alt = color;
-        biddingOptionSpan.classList.add('bidding-option-span');
-        biddingOptionImg.classList.add('bidding-option-img')
-
-        // Append span and img to the container
-        biddingOptionContainer.appendChild(biddingOptionSpan);
-        biddingOptionContainer.appendChild(biddingOptionImg);
-
-        // Append container to the biddingOptions
-        biddingOptions.appendChild(biddingOptionContainer);
-
-        // Add click event listener to the container
-        biddingOptionContainer.addEventListener('click', () => {
-            
-        });
-      });
+    // Check if the bid has already been clicked
+    if (clickedBids.includes(bidNumber)) {
+      return; // Do nothing if the bid has already been clicked
     }
 
-    // Update the last clicked option
-    lastClickedOption = option;
+    bidOptions.forEach(opt => {
+      opt.classList.remove('selected');
+    });
+
+    biddingOptions.classList.add('hidden');
+    option.classList.add('selected');
+    biddingOptions.classList.remove('hidden');
+    biddingOptions.innerHTML = '';
+
+    const colors = ['club', 'diamond', 'heart', 'spade', 'no-trump'];
+    colors.forEach(color => {
+      const biddingOptionContainer = document.createElement('div');
+      biddingOptionContainer.classList.add('bidding-option-container');
+      const biddingOptionSpan = document.createElement('span');
+      const biddingOptionImg = document.createElement('img');
+      const fullBidInfo = `${bidNumber}${color.charAt(0).toUpperCase()}`; // Full bid information
+      biddingOptionSpan.textContent = `${bidNumber}`; // Display only bid number
+      biddingOptionImg.src = `../img/${color}.svg`;
+      biddingOptionImg.alt = color;
+      biddingOptionSpan.classList.add('bidding-option-span');
+      biddingOptionImg.classList.add('bidding-option-img');
+      biddingOptionContainer.appendChild(biddingOptionSpan);
+      biddingOptionContainer.appendChild(biddingOptionImg);
+      biddingOptions.appendChild(biddingOptionContainer);
+
+      biddingOptionContainer.addEventListener('click', () => {
+        const selectedBidContainer = document.createElement('div');
+        selectedBidContainer.classList.add('selected-bid-container');
+        const selectedBidSpan = document.createElement('span');
+        const selectedBidImg = document.createElement('img');
+        selectedBidSpan.textContent = `${bidNumber}`; // Display only bid number
+        selectedBidImg.src = `../img/${color}.svg`;
+        selectedBidImg.alt = color;
+        selectedBidSpan.classList.add('bidding-option-span');
+        selectedBidImg.classList.add('bidding-option-img');
+        selectedBidContainer.appendChild(selectedBidSpan);
+        selectedBidContainer.appendChild(selectedBidImg);
+        biddingSpace.appendChild(selectedBidContainer);
+
+        const passContainer = document.createElement('div');
+        passContainer.classList.add('pass-container', 'selected-bid-container');
+        passContainer.textContent = 'P';
+        biddingSpace.appendChild(passContainer);
+
+        biddingOptionContainer.classList.add('pointer-events'); // Disable the clicked bid option
+        biddingOptionContainer.style.backgroundColor = 'darkgray'; // Change color of clicked bid option
+
+        // Store the clicked bid and its full information in the arrays
+        clickedBids.push(fullBidInfo);
+        clickedBidsValues.push(fullBidInfo);
+
+        biddingOptionContainer.classList.add('pointer-events'); // Disable the clicked bidding option
+        biddingOptionContainer.style.backgroundColor = 'darkgray'; // Change color of clicked bidding option
+
+        biddingOptionContainer.removeEventListener('click', listener); // Remove click listener from the clicked bidding option
+
+        setTimeout(() => {
+          showHand1 = !showHand1;
+          renderVisibleHands(); // Trigger hand swap after 3 seconds
+        }, 3000);
+      });
+
+      // Add event listener with named function to remove it later
+      const listener = () => {
+        biddingOptionContainer.click();
+      };
+
+      biddingOptionContainer.addEventListener('click', listener);
+    });
   });
 });
 
-
-
-
+const passButton = document.querySelector('.pass');
+passButton.addEventListener('click', () => {
+  const passContainer = document.createElement('div');
+  passContainer.classList.add('pass-container', 'selected-bid-container');
+  passContainer.textContent = 'P';
+  biddingSpace.appendChild(passContainer);
+  showBothHands = !showBothHands;
+  // Render the visible hand(s)
+  renderVisibleHands();
+  function openAndBlur() {
+    var newWindow = window.open(joinHands(hand1, hand3, hand2, hand4), '_blank', 'height=350,width=700');
+    window.blur(); // Blur the current window
+    setTimeout(function() {
+        newWindow.blur();
+    }, 1000); // Adjust the delay as needed
+  }
+openAndBlur()
+});
